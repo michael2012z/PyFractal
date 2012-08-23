@@ -23,12 +23,19 @@ class MainWindow:
                         "on_drawingArea_expose_event" : self.on_drawingArea_expose_event }
         self.wTree.signal_autoconnect(callbackDic)
         self.wTree.get_widget('mainWindow').show()
+        
         self.drawArea = self.wTree.get_widget('drawingArea')
         self.offImage = gtk.gdk.Pixmap(self.drawArea.window, 600, 600, -1)
         colorMap = gtk.gdk.colormap_get_system()
         color = colorMap.alloc_color("white")
         gc = self.offImage.new_gc(color)
         self.offImage.draw_rectangle(gc, True, 0, 0, 600, 600)
+        # drawing thread
+        self.drawing_thread = SyntaxFractal()
+        
+        # set control panel
+        self.controlPanelContainer = self.wTree.get_widget('controlPanelContainer')
+        self.controlPanelContainer.pack_start(self.drawing_thread.getControlPanel(), False, False, 0)
         return
     
     def on_drawButton_clicked(self, widget):
@@ -42,7 +49,6 @@ class MainWindow:
         self.offImage.draw_rectangle(gc, True, 0, 0, 600, 600)
         
         print "on_drawButton_clicked"
-        self.drawing_thread = SyntaxFractal()
         self.refreshing_thread = threading.Thread(target=self.refreshing)
         self.drawing_thread.start()
         self.refreshing_thread.start()

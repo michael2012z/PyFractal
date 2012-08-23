@@ -1,6 +1,7 @@
 from Fractal import Fractal
 import math
 import time
+import gtk
 
 class SyntaxFractal (Fractal):
     
@@ -22,6 +23,11 @@ class SyntaxFractal (Fractal):
         self.startingAction = ['F', '-',  '-', 'F', '-',  '-', 'F']
         self.formulaF = ['F', '+', 'F', '-',  '-', 'F', '+', 'F']
         return
+    
+    def getControlPanel(self):
+        self.gladefile = "fractals/Syntax.glade"
+        self.wTree = gtk.glade.XML(self.gladefile)
+        return self.wTree.get_widget('controlPanel')
     
     def generateFullSyntax(self):
         self.fullSyntax = self.startingAction

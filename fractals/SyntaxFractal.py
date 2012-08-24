@@ -25,7 +25,7 @@ class SyntaxFractal (Fractal):
         return
     
     def getControlPanel(self):
-        self.gladefile = "fractals/Syntax.glade"
+        self.gladefile = "fractals/SyntaxFractal.glade"
         self.wTree = gtk.glade.XML(self.gladefile)
         return self.wTree.get_widget('controlPanel')
     
@@ -99,6 +99,11 @@ class SyntaxFractal (Fractal):
         str += "%s%s%s" %('fullSyntax : ', self.fullSyntax, '\n')
         return str
         
+    def getName(self):
+        return "Syntax"
+    
+    
+    
 if __name__ == '__main__':
     syntax = SyntaxFractal()
     syntax.delta = 60

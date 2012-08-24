@@ -51,6 +51,7 @@
         </child>
         <child>
           <widget class="GtkVBox" id="vbox1">
+            <property name="width_request">250</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <child>
@@ -69,6 +70,8 @@
                       <widget class="GtkComboBox" id="selectorCombo">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="items" translatable="yes">- Select a template -</property>
+                        <signal name="changed" handler="on_selectorCombo_changed" swapped="no"/>
                       </widget>
                     </child>
                   </widget>

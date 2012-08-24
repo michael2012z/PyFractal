@@ -6,6 +6,7 @@ import time
 import threading
 import gobject
 from SyntaxFractal import SyntaxFractal
+from BlankFractal import BlankFractal
 
 class MainWindow:
     drawing_thread = None
@@ -14,30 +15,63 @@ class MainWindow:
     drawArea = None
     offImage = None
     drawingFinish = True
+    selectorCombo = None
     
-    def __init__(self):
+    fractalList = None
+    
+    def registerFractals(self):
+        self.fractalList = []
+        self.fractalList.append(SyntaxFractal())
+        self.fractalList.append(BlankFractal())
+        return
+    
+    def showWindow(self):
+        # show main window
         self.gladefile = "glade/MainWindow.glade"
         self.wTree = gtk.glade.XML(self.gladefile)
         callbackDic = { "on_mainWindow_destroy" : lambda x: gtk.main_quit(),
                         "on_drawButton_clicked" : self.on_drawButton_clicked,
-                        "on_drawingArea_expose_event" : self.on_drawingArea_expose_event }
+                        "on_drawingArea_expose_event" : self.on_drawingArea_expose_event, 
+                        "on_selectorCombo_changed" : self.on_selectorCombo_changed }
         self.wTree.signal_autoconnect(callbackDic)
         self.wTree.get_widget('mainWindow').show()
         
+        # make off-screen image
         self.drawArea = self.wTree.get_widget('drawingArea')
         self.offImage = gtk.gdk.Pixmap(self.drawArea.window, 600, 600, -1)
         colorMap = gtk.gdk.colormap_get_system()
         color = colorMap.alloc_color("white")
         gc = self.offImage.new_gc(color)
         self.offImage.draw_rectangle(gc, True, 0, 0, 600, 600)
-        # drawing thread
-        self.drawing_thread = SyntaxFractal()
         
+        # make the combo box
+        self.selectorCombo = self.wTree.get_widget('selectorCombo')
+        #self.selectorCombo.append_text('Select a template')
+        for i in range(0, len(self.fractalList)):
+            self.selectorCombo.append_text(self.fractalList[i].getName())
+         
         # set control panel
         self.controlPanelContainer = self.wTree.get_widget('controlPanelContainer')
-        self.controlPanelContainer.pack_start(self.drawing_thread.getControlPanel(), False, False, 0)
         return
     
+    def __init__(self):
+        self.registerFractals()
+        self.showWindow()
+        return
+    
+    def on_selectorCombo_changed(self, widget):
+        index = widget.get_active()
+        if (index == 0) or (index > len(self.fractalList)):
+            return
+        fractal = self.fractalList[index - 1]
+        self.drawing_thread = fractal
+        
+        existingComponents = self.controlPanelContainer.get_children()
+        if len(existingComponents) != 0:
+            self.controlPanelContainer.remove(existingComponents[0])
+        self.controlPanelContainer.pack_start(self.drawing_thread.getControlPanel(), False, False, 0)
+        return
+        
     def on_drawButton_clicked(self, widget):
         if self.drawingFinish == False:
             return

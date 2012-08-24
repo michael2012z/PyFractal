@@ -20,6 +20,9 @@ class Fractal (threading.Thread):
         self.gc = self.offImage.new_gc(self.color)
         return
     
+    def getName(self):
+        return ""
+    
     def run(self):
         return
     

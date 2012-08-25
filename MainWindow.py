@@ -14,9 +14,8 @@ class MainWindow:
     wTree = None
     drawArea = None
     offImage = None
-    drawingFinish = True
     selectorCombo = None
-    
+    fractal = None
     fractalList = None
     
     def registerFractals(self):
@@ -60,23 +59,26 @@ class MainWindow:
         return
     
     def on_selectorCombo_changed(self, widget):
+        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
+            return
         index = widget.get_active()
         if (index == 0) or (index > len(self.fractalList)):
             return
         fractal = self.fractalList[index - 1]
-        self.drawing_thread = fractal
+        self.fractal = fractal
         
         existingComponents = self.controlPanelContainer.get_children()
         if len(existingComponents) != 0:
             self.controlPanelContainer.remove(existingComponents[0])
-        self.controlPanelContainer.pack_start(self.drawing_thread.getControlPanel(), False, False, 0)
+        self.controlPanelContainer.pack_start(self.fractal.getControlPanel(), False, False, 0)
         return
         
     def on_drawButton_clicked(self, widget):
-        if self.drawingFinish == False:
+        if (self.fractal == None) or ((self.drawing_thread != None) and (self.drawing_thread.isAlive() == True)):
             return
-        
-        self.drawingFinish = False
+
+        self.drawing_thread = threading.Thread(target=self.fractal.drawing)
+
         colorMap = gtk.gdk.colormap_get_system()
         color = colorMap.alloc_color("white")
         gc = self.offImage.new_gc(color)
@@ -92,19 +94,17 @@ class MainWindow:
 
     def refreshing(self):
         gc = self.offImage.new_gc()
-        #color = gtk.gdk.Color(red=65535, green=65535, blue=65535, pixel=0)
-        #gc = self.drawArea.window.new_gc(color)
         while (True):
             time.sleep(0.01)
-            self.drawArea.window.draw_drawable(gc, self.drawing_thread.getDrawable(), 0, 0, 0, 0, 600, 600)
-            if self.drawingFinish == True:
+            self.drawArea.window.draw_drawable(gc, self.fractal.getDrawable(), 0, 0, 0, 0, 600, 600)
+            if self.drawing_thread.isAlive() == False:
                 break
         return
     
     def on_drawingArea_expose_event(self, area, event):
-        gc = self.offImage.new_gc()
-        if self.drawing_thread != None:
-            self.drawArea.window.draw_drawable(gc, self.drawing_thread.getDrawable(), 0, 0, 0, 0, 600, 600)
+        if (self.fractal != None) and (self.drawing_thread != None) and (self.drawing_thread.isAlive() == False):
+            gc = self.offImage.new_gc()
+            self.drawArea.window.draw_drawable(gc, self.fractal.getDrawable(), 0, 0, 0, 0, 600, 600)
         return
     
 if __name__ == '__main__':

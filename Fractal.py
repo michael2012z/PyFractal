@@ -1,15 +1,13 @@
-import threading
 import gtk
 
 
-class Fractal (threading.Thread):
+class Fractal:
     offImage = None
     colorMap = None
     color = None
     gc = None
 
     def __init__(self):
-        threading.Thread.__init__(self)
         print "Fractal.__init__"
         self.offImage = gtk.gdk.Pixmap(None, 600, 600, 24)
         self.colorMap = gtk.gdk.colormap_get_system()
@@ -23,7 +21,7 @@ class Fractal (threading.Thread):
     def getName(self):
         return ""
     
-    def run(self):
+    def drawing(self):
         return
     
     def getDrawable(self):
@@ -39,3 +37,10 @@ class Fractal (threading.Thread):
         realY2 = 300 - y2
         self.offImage.draw_line(self.gc, int(realX1), int(realY1), int(realX2), int(realY2))
         return
+    
+    def cleanAll(self):
+        color = self.colorMap.alloc_color("white")
+        gc = self.offImage.new_gc(color)
+        self.offImage.draw_rectangle(gc, True, 0, 0, 600, 600)
+        return
+    

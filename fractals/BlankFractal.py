@@ -1,6 +1,4 @@
 from Fractal import Fractal
-import math
-import time
 import gtk
 
 class BlankFractal (Fractal):
@@ -15,7 +13,8 @@ class BlankFractal (Fractal):
         return self.wTree.get_widget('controlPanel')
 
     
-    def run(self):
+    def drawing(self):
+        self.cleanAll()
         self.drawLine(-300, -300, 300, 300)
         self.drawLine(-300, 300, 300, -300)
         return

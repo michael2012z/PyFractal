@@ -7,7 +7,7 @@
     <property name="height_request">400</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="n_rows">10</property>
+    <property name="n_rows">12</property>
     <property name="n_columns">2</property>
     <child>
       <widget class="GtkLabel" id="label1">
@@ -136,6 +136,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">0</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
@@ -153,6 +154,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">F--F--F</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -171,6 +173,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">5</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -189,6 +192,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">2</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -207,6 +211,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">60</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -225,6 +230,7 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">F+F--F+F</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -242,6 +248,7 @@
       <widget class="GtkEntry" id="entry7">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="editable">False</property>
         <property name="invisible_char">●</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
@@ -260,6 +267,7 @@
       <widget class="GtkEntry" id="entry8">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="editable">False</property>
         <property name="invisible_char">●</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
@@ -278,6 +286,7 @@
       <widget class="GtkEntry" id="entry9">
         <property name="visible">True</property>
         <property name="can_focus">True</property>
+        <property name="editable">False</property>
         <property name="invisible_char">●</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
@@ -290,6 +299,64 @@
         <property name="right_attach">2</property>
         <property name="top_attach">9</property>
         <property name="bottom_attach">10</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkLabel" id="label8">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Start X</property>
+      </widget>
+      <packing>
+        <property name="top_attach">10</property>
+        <property name="bottom_attach">11</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkLabel" id="label9">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Start Y</property>
+      </widget>
+      <packing>
+        <property name="top_attach">11</property>
+        <property name="bottom_attach">12</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkEntry" id="entry10">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">-250</property>
+        <property name="primary_icon_activatable">False</property>
+        <property name="secondary_icon_activatable">False</property>
+        <property name="primary_icon_sensitive">True</property>
+        <property name="secondary_icon_sensitive">True</property>
+      </widget>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="right_attach">2</property>
+        <property name="top_attach">10</property>
+        <property name="bottom_attach">11</property>
+      </packing>
+    </child>
+    <child>
+      <widget class="GtkEntry" id="entry11">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="invisible_char">●</property>
+        <property name="text" translatable="yes">150</property>
+        <property name="primary_icon_activatable">False</property>
+        <property name="secondary_icon_activatable">False</property>
+        <property name="primary_icon_sensitive">True</property>
+        <property name="secondary_icon_sensitive">True</property>
+      </widget>
+      <packing>
+        <property name="left_attach">1</property>
+        <property name="right_attach">2</property>
+        <property name="top_attach">11</property>
+        <property name="bottom_attach">12</property>
       </packing>
     </child>
   </widget>

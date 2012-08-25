@@ -38,6 +38,9 @@ class Fractal:
         self.offImage.draw_line(self.gc, int(realX1), int(realY1), int(realX2), int(realY2))
         return
     
+    def stopDrawing(self):
+        return
+    
     def cleanAll(self):
         color = self.colorMap.alloc_color("white")
         gc = self.offImage.new_gc(color)

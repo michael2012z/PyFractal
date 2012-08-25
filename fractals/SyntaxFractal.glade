@@ -17,9 +17,11 @@
       </widget>
     </child>
     <child>
-      <widget class="GtkComboBox" id="combobox1">
+      <widget class="GtkComboBox" id="presetCombobox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="items" translatable="yes">- Select preset param -</property>
+        <signal name="changed" handler="on_presetCombobox_changed" swapped="no"/>
       </widget>
       <packing>
         <property name="left_attach">1</property>
@@ -136,7 +138,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">0</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
@@ -154,7 +155,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">F--F--F</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -173,7 +173,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">5</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -192,7 +191,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">2</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -211,7 +209,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">60</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -230,7 +227,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">F+F--F+F</property>
         <property name="invisible_char_set">True</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
@@ -328,7 +324,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">-250</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>
@@ -346,7 +341,6 @@
         <property name="visible">True</property>
         <property name="can_focus">True</property>
         <property name="invisible_char">●</property>
-        <property name="text" translatable="yes">150</property>
         <property name="primary_icon_activatable">False</property>
         <property name="secondary_icon_activatable">False</property>
         <property name="primary_icon_sensitive">True</property>

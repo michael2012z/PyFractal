@@ -17,6 +17,7 @@ class MainWindow:
     selectorCombo = None
     fractal = None
     fractalList = None
+    drawButton = None
     
     def registerFractals(self):
         self.fractalList = []
@@ -34,6 +35,9 @@ class MainWindow:
                         "on_selectorCombo_changed" : self.on_selectorCombo_changed }
         self.wTree.signal_autoconnect(callbackDic)
         self.wTree.get_widget('mainWindow').show()
+        
+        # save button widget
+        self.drawButton = self.wTree.get_widget('drawButton')
         
         # make off-screen image
         self.drawArea = self.wTree.get_widget('drawingArea')
@@ -74,7 +78,12 @@ class MainWindow:
         return
         
     def on_drawButton_clicked(self, widget):
-        if (self.fractal == None) or ((self.drawing_thread != None) and (self.drawing_thread.isAlive() == True)):
+        if self.fractal == None:
+            return
+
+        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
+            widget.set_label("Draw")
+            self.fractal.stopDrawing()
             return
 
         self.drawing_thread = threading.Thread(target=self.fractal.drawing)
@@ -88,6 +97,8 @@ class MainWindow:
         self.refreshing_thread = threading.Thread(target=self.refreshing)
         self.drawing_thread.start()
         self.refreshing_thread.start()
+        widget.set_label("Stop")
+
         #self.drawing_thread.join()
         #self.refreshing_thread.join()
         return
@@ -98,6 +109,7 @@ class MainWindow:
             time.sleep(0.01)
             self.drawArea.window.draw_drawable(gc, self.fractal.getDrawable(), 0, 0, 0, 0, 600, 600)
             if self.drawing_thread.isAlive() == False:
+                self.drawButton.set_label("Draw")
                 break
         return
     

@@ -19,6 +19,8 @@ class SyntaxFractal (Fractal):
     stepLength = 1
     startX = 0
     startY = 0
+    predefinedParams = []
+    stopFlag = False
     
     def __init__(self):
         Fractal.__init__(self)
@@ -27,7 +29,23 @@ class SyntaxFractal (Fractal):
         self.wTree = gtk.glade.XML(self.gladefile)
         callbackDic = { "on_checkbutton1_toggled" : self.on_checkbutton1_toggled,
                         "on_checkbutton2_toggled" : self.on_checkbutton2_toggled,
-                        "on_checkbutton3_toggled" : self.on_checkbutton3_toggled }
+                        "on_checkbutton3_toggled" : self.on_checkbutton3_toggled, 
+                        "on_presetCombobox_changed" : self.on_presetCombobox_changed }
+        self.wTree.signal_autoconnect(callbackDic)
+        self.definePresetParams()
+        return
+    
+    def definePresetParams(self):
+        # each preset is defined as:
+        # [name, initial angle, initial action, depth, step length, delta, F, X enabled, X, Y enabled, Y, Z enabled, Z, startX, startY]
+        self.predefinedParams.append(["Koch Snowflake", 0, "F--F--F", 5, 2, 60, "F+F--F+F", False, "", False, "", False, "", -250, 150])
+        self.predefinedParams.append(["Koch R-Snowflake", 0, "F++F++F", 5, 2, 60, "F+F--F+F", False, "", False, "", False, "", -250, -150])
+        self.predefinedParams.append(["UnNamed 1", 0, "F+F+F+F", 4, 1, 90, "F+F-F-F+F+F-F", False, "", False, "", False, "", 0, -150])
+        self.predefinedParams.append(["UnNamed 2", 0, "F-F-F-F-", 4, 2, 90, "FF-F-F-F-F-F+F", False, "", False, "", False, "", 200, 200])
+        
+        presetCombobox = self.wTree.get_widget('presetCombobox')
+        for i in range(0, len(self.predefinedParams)):
+            presetCombobox.append_text(self.predefinedParams[i][0])
         return
     
     def getControlPanel(self):
@@ -70,25 +88,30 @@ class SyntaxFractal (Fractal):
         newX = 0.0
         newY = 0.0
         stack = []
+        self.stopFlag = False
         for i in range(0, len(self.fullSyntax)):
+            # check stop flag at beginning of each loop
+            if self.stopFlag == True:
+                self.stopFlag = False
+                return
             time.sleep(0.001)
             if self.fullSyntax[i] == "F":
                 newX = oldX + self.stepLength * math.cos(angle)
                 newY = oldY + self.stepLength * math.sin(angle)
                 self.drawLine(oldX, oldY, newX, newY)
-                print "draw a line for (%f, %f) to (%f, %f)" %(oldX, oldY, newX, newY)
+                #print "draw a line for (%f, %f) to (%f, %f)" %(oldX, oldY, newX, newY)
                 oldX = newX
                 oldY = newY
             elif self.fullSyntax[i] == "+":
                 direction += self.delta
                 direction %= 360
                 angle = math.pi * direction / 180
-                print "turn + ", self.delta
+                #print "turn + ", self.delta
             elif self.fullSyntax[i] == "-":
                 direction -= self.delta
                 direction %= 360
                 angle = math.pi * direction / 180
-                print "turn - ", self.delta
+                #print "turn - ", self.delta
             elif self.fullSyntax[i] == "[":
                 # save location and direction
                 stack.append([oldX, oldY, direction])
@@ -97,6 +120,10 @@ class SyntaxFractal (Fractal):
                 oldX, oldY, direction = stack.pop()
             else:
                 print "do nothing for : ", self.fullSyntax[i]
+        return
+    
+    def stopDrawing(self):
+        self.stopFlag = True
         return
     
     def stringToList(self, sstr):
@@ -176,6 +203,28 @@ class SyntaxFractal (Fractal):
 
     def on_checkbutton3_toggled(self, widget):
         self.wTree.get_widget('entry9').set_editable(widget.get_active())
+        return
+    
+    def on_presetCombobox_changed(self, widget):
+        index = widget.get_active()
+        if index == 0:
+            return
+        
+        param = self.predefinedParams[index - 1]
+        self.wTree.get_widget('entry1').set_text(param[1].__str__())
+        self.wTree.get_widget('entry2').set_text(param[2])
+        self.wTree.get_widget('entry3').set_text(param[3].__str__())
+        self.wTree.get_widget('entry4').set_text(param[4].__str__())
+        self.wTree.get_widget('entry5').set_text(param[5].__str__())
+        self.wTree.get_widget('entry6').set_text(param[6])
+        self.wTree.get_widget('checkbutton1').set_active(param[7])
+        self.wTree.get_widget('entry7').set_text(param[8])
+        self.wTree.get_widget('checkbutton2').set_active(param[9])
+        self.wTree.get_widget('entry8').set_text(param[10])
+        self.wTree.get_widget('checkbutton3').set_active(param[11])
+        self.wTree.get_widget('entry9').set_text(param[12])
+        self.wTree.get_widget('entry10').set_text(param[13].__str__())
+        self.wTree.get_widget('entry11').set_text(param[14].__str__())
         return
     
     def __str__ (self):

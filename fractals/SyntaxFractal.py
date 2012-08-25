@@ -47,7 +47,11 @@ class SyntaxFractal (Fractal):
         self.predefinedParams.append(["C 2 3", 55, "F", 7, 3, 25, "F[-F][+F]F", False, "", False, "", False, "", 0, -200])
         self.predefinedParams.append(["C 2 4", 0, "F-F-F-F", 5, 2, 90, "F[F]-F+F[--F]+F-F", False, "", False, "", False, "", -250, 250])
         self.predefinedParams.append(["C 2 5", 0, "F-F-F-F", 5, 2, 90, "FF[-F-F-F]F", False, "", False, "", False, "", -100, -200])
-        self.predefinedParams.append(["C 3 1", 0, "X", 3, 3, 90, "F", True, "-YF+XFX+FY-", True, "+XF-YFY-FX+", False, "", 0, 0])
+        self.predefinedParams.append(["C 3 1", 0, "X", 7, 4, 90, "F", True, "-YF+XFX+FY-", True, "+XF-YFY-FX+", False, "", -260, 260])
+        self.predefinedParams.append(["C 3 2", 0, "X", 4, 6, 90, "F", True, "XFYFX+F+YFXFY-F-XFYFX", True, "YFXFY-F-XFYFX+F+YFXFY", False, "", -250, -250])
+        self.predefinedParams.append(["C 3 3", 0, "-Y", 4, 6, 90, "F", True, "-YFYF+XFXFX+F+XF-YFY-FX", True, "YF+XFX+FY-F-YFYFY-FXFX+", False, "", -250, 250])
+        self.predefinedParams.append(["C 3 4", 150, "X", 8, 2, 30, "F", True, "[+FXF][-FXF]YX", True, "YFY", False, "", 0, -250])
+        self.predefinedParams.append(["C 3 5", 0, "F", 10, 1, 60, "+X-F-X+", True, "-F+X+F-", False, "", False, "", -260, -200])
         
         presetCombobox = self.wTree.get_widget('presetCombobox')
         for i in range(0, len(self.predefinedParams)):
@@ -125,7 +129,8 @@ class SyntaxFractal (Fractal):
                 # pop location and direction
                 oldX, oldY, direction = stack.pop()
             else:
-                print "do nothing for : ", self.fullSyntax[i]
+                self.fullSyntax[i]
+                #print "do nothing for : ", self.fullSyntax[i]
         return
     
     def stopDrawing(self):
@@ -162,15 +167,18 @@ class SyntaxFractal (Fractal):
         for i in range(0, len(formula)):
             if formula[i] == 'F' or formula[i] == '+' or formula[i] == '-':
                 continue
-            elif formula[i] == 'X' and self.formulaXEnabled == False:
-                print "Error, formula X is not enabled"
-                return False
-            elif formula[i] == 'Y' and self.formulaYEnabled == False:
-                print "Error, formula Y is not enabled"
-                return False
-            elif formula[i] == 'Z' and self.formulaZEnabled == False:
-                print "Error, formula Z is not enabled"
-                return False
+            elif formula[i] == 'X':
+                if self.formulaXEnabled == False:
+                    print "Error, formula X is not enabled"
+                    return False
+            elif formula[i] == 'Y':
+                if self.formulaYEnabled == False:
+                    print "Error, formula Y is not enabled"
+                    return False
+            elif formula[i] == 'Z':
+                if self.formulaZEnabled == False:
+                    print "Error, formula Z is not enabled"
+                    return False
             elif formula[i] == '[':
                 stack.append(formula[i])
             elif formula[i] == ']':
@@ -224,10 +232,13 @@ class SyntaxFractal (Fractal):
         self.wTree.get_widget('entry5').set_text(param[5].__str__())
         self.wTree.get_widget('entry6').set_text(param[6])
         self.wTree.get_widget('checkbutton1').set_active(param[7])
+        self.wTree.get_widget('entry7').set_editable(param[7])
         self.wTree.get_widget('entry7').set_text(param[8])
         self.wTree.get_widget('checkbutton2').set_active(param[9])
+        self.wTree.get_widget('entry8').set_editable(param[9])
         self.wTree.get_widget('entry8').set_text(param[10])
         self.wTree.get_widget('checkbutton3').set_active(param[11])
+        self.wTree.get_widget('entry9').set_editable(param[11])
         self.wTree.get_widget('entry9').set_text(param[12])
         self.wTree.get_widget('entry10').set_text(param[13].__str__())
         self.wTree.get_widget('entry11').set_text(param[14].__str__())

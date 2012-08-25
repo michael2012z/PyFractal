@@ -106,7 +106,7 @@ class MainWindow:
     def refreshing(self):
         gc = self.offImage.new_gc()
         while (True):
-            time.sleep(0.01)
+            time.sleep(0.05)
             self.drawArea.window.draw_drawable(gc, self.fractal.getDrawable(), 0, 0, 0, 0, 600, 600)
             if self.drawing_thread.isAlive() == False:
                 self.drawButton.set_label("Draw")

@@ -40,8 +40,14 @@ class SyntaxFractal (Fractal):
         # [name, initial angle, initial action, depth, step length, delta, F, X enabled, X, Y enabled, Y, Z enabled, Z, startX, startY]
         self.predefinedParams.append(["Koch Snowflake", 0, "F--F--F", 5, 2, 60, "F+F--F+F", False, "", False, "", False, "", -250, 150])
         self.predefinedParams.append(["Koch R-Snowflake", 0, "F++F++F", 5, 2, 60, "F+F--F+F", False, "", False, "", False, "", -250, -150])
-        self.predefinedParams.append(["UnNamed 1", 0, "F+F+F+F", 4, 1, 90, "F+F-F-F+F+F-F", False, "", False, "", False, "", 0, -150])
-        self.predefinedParams.append(["UnNamed 2", 0, "F-F-F-F-", 4, 2, 90, "FF-F-F-F-F-F+F", False, "", False, "", False, "", 200, 200])
+        self.predefinedParams.append(["C 1 1", 0, "F+F+F+F", 4, 1, 90, "F+F-F-F+F+F-F", False, "", False, "", False, "", 0, -150])
+        self.predefinedParams.append(["C 1 2", 0, "F-F-F-F-", 4, 2, 90, "FF-F-F-F-F-F+F", False, "", False, "", False, "", 200, 200])
+        self.predefinedParams.append(["C 2 1", 90, "F", 6, 2, 25, "F[+F]F[-F+F]", False, "", False, "", False, "", 0, -200])
+        self.predefinedParams.append(["C 2 2", 90, "F", 5, 5, 20, "FF+[+F-F-F]-[-F+F+F]", False, "", False, "", False, "", 200, -200])
+        self.predefinedParams.append(["C 2 3", 55, "F", 7, 3, 25, "F[-F][+F]F", False, "", False, "", False, "", 0, -200])
+        self.predefinedParams.append(["C 2 4", 0, "F-F-F-F", 5, 2, 90, "F[F]-F+F[--F]+F-F", False, "", False, "", False, "", -250, 250])
+        self.predefinedParams.append(["C 2 5", 0, "F-F-F-F", 5, 2, 90, "FF[-F-F-F]F", False, "", False, "", False, "", -100, -200])
+        self.predefinedParams.append(["C 3 1", 0, "X", 3, 3, 90, "F", True, "-YF+XFX+FY-", True, "+XF-YFY-FX+", False, "", 0, 0])
         
         presetCombobox = self.wTree.get_widget('presetCombobox')
         for i in range(0, len(self.predefinedParams)):
@@ -94,7 +100,7 @@ class SyntaxFractal (Fractal):
             if self.stopFlag == True:
                 self.stopFlag = False
                 return
-            time.sleep(0.001)
+            #time.sleep(0.001)
             if self.fullSyntax[i] == "F":
                 newX = oldX + self.stepLength * math.cos(angle)
                 newY = oldY + self.stepLength * math.sin(angle)

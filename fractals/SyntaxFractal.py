@@ -1,6 +1,5 @@
 from Fractal import Fractal
 import math
-import time
 import gtk
 
 class SyntaxFractal (Fractal):

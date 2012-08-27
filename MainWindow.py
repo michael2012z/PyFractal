@@ -7,6 +7,7 @@ import threading
 import gobject
 from SyntaxFractal import SyntaxFractal
 from BlankFractal import BlankFractal
+from IFSFractal import IFSFractal
 
 class MainWindow:
     drawing_thread = None
@@ -23,6 +24,7 @@ class MainWindow:
         self.fractalList = []
         self.fractalList.append(SyntaxFractal())
         self.fractalList.append(BlankFractal())
+        self.fractalList.append(IFSFractal())
         return
     
     def showWindow(self):

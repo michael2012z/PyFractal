@@ -44,6 +44,14 @@ class Fractal:
         self.offImage.draw_point(self.gc, int(realX), int(realY))
         return
     
+    def drawPointColor(self, x, y, color):
+        realX = x + 300
+        realY = 300 - y
+        color = self.colorMap.alloc_color(color)
+        gc = self.offImage.new_gc(color)
+        self.offImage.draw_point(gc, int(realX), int(realY))
+        return
+    
     def drawPointOffset(self, x, y, xOffset, yOffset):
         realX = 300 + (x + xOffset)
         realY = 300 - (y + yOffset)
@@ -51,6 +59,7 @@ class Fractal:
         return
     
     def stopDrawing(self):
+        self.stopFlag = True
         return
     
     def cleanAll(self):

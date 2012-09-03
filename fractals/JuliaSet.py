@@ -24,7 +24,7 @@ class JuliaSet (Fractal):
         return self.wTree.get_widget('controlPanel')
     
     def definePresetParams(self):
-        self.predefinedParams.append(["Configuration 0", -0.75, 0.0])
+        self.predefinedParams.append(["Configuration 0", 0.75, 0.0])
         self.predefinedParams.append(["Configuration 1", 0.0, 0.0])
         self.predefinedParams.append(["Configuration 2", -0.46, 0.57])
         self.predefinedParams.append(["Configuration 3", -0.595, -0.435])
@@ -70,7 +70,7 @@ class JuliaSet (Fractal):
                 z = (1.5 * i/(self.width/2), 1.5*j/(self.height/2))
                 #print z
                 k = 0
-                for k in range(0, 16):
+                for k in range(0, 128):
                     # check stop flag at beginning of each loop
                     if self.stopFlag == True:
                         self.stopFlag = False
@@ -84,10 +84,8 @@ class JuliaSet (Fractal):
                     else:
                         break
                 if True:
-                    color = gtk.gdk.Color(red=1.0*k/16, green=(1.0-1.0*k/16), blue=(1.0 - 1.0*k/16))
+                    color = gtk.gdk.Color(red=1.0*k/128, green=(1.0-1.0*k/128), blue=(1.0 - 1.0*k/128))
                     self.drawPointColor(i, j, color)
-                #if k>3:
-                #    self.drawPoint(i, j)
         print max
         return
     
@@ -109,6 +107,7 @@ class JuliaSet (Fractal):
         re = float(self.wTree.get_widget('entryCRe').get_text())
         im = float(self.wTree.get_widget('entryCIm').get_text())
         self.c0 = (re, im)
+        print self.c0
         return
         
         

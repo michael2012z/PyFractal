@@ -75,7 +75,7 @@ class JuliaSet (Fractal):
                     if self.stopFlag == True:
                         self.stopFlag = False
                         return
-                    if (z[0]*z[0] + z[1]*z[1]) <= 3:
+                    if (z[0]*z[0] + z[1]*z[1]) <= 4.0:
                         # calculate new z
                         z = self.cMinus(self.cMulti(z, z), self.c0)
                         if k > max:

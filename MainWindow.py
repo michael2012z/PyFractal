@@ -9,6 +9,7 @@ from SyntaxFractal import SyntaxFractal
 from BlankFractal import BlankFractal
 from IFSFractal import IFSFractal
 from JuliaSet import JuliaSet
+from Mandelbrot import Mandelbrot
 
 class MainWindow:
     drawing_thread = None
@@ -27,6 +28,7 @@ class MainWindow:
         self.fractalList.append(BlankFractal())
         self.fractalList.append(IFSFractal())
         self.fractalList.append(JuliaSet())
+        self.fractalList.append(Mandelbrot())
         return
     
     def showWindow(self):

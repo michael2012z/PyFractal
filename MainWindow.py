@@ -21,6 +21,9 @@ class MainWindow:
     fractal = None
     fractalList = None
     drawButton = None
+    draging = False
+    dragingStartP = (0, 0)
+    dragingEndP = (0, 0)
     
     def registerFractals(self):
         self.fractalList = []
@@ -31,6 +34,7 @@ class MainWindow:
         self.fractalList.append(Mandelbrot())
         return
     
+    
     def showWindow(self):
         # show main window
         self.gladefile = "glade/MainWindow.glade"
@@ -38,7 +42,11 @@ class MainWindow:
         callbackDic = { "on_mainWindow_destroy" : lambda x: gtk.main_quit(),
                         "on_drawButton_clicked" : self.on_drawButton_clicked,
                         "on_drawingArea_expose_event" : self.on_drawingArea_expose_event, 
-                        "on_selectorCombo_changed" : self.on_selectorCombo_changed }
+                        "on_selectorCombo_changed" : self.on_selectorCombo_changed,
+                        "on_drawingArea_button_press_event": self.on_drawingArea_button_press_event,
+                        "on_drawingArea_button_release_event": self.on_drawingArea_button_release_event,
+                        "on_drawingArea_motion_notify_event": self.on_drawingArea_motion_notify_event
+                         }
         self.wTree.signal_autoconnect(callbackDic)
         self.wTree.get_widget('mainWindow').show()
         
@@ -123,6 +131,53 @@ class MainWindow:
         if (self.fractal != None) and (self.drawing_thread != None) and (self.drawing_thread.isAlive() == False):
             gc = self.offImage.new_gc()
             self.drawArea.window.draw_drawable(gc, self.fractal.getDrawable(), 0, 0, 0, 0, 600, 600)
+        return
+    
+    def on_drawingArea_button_press_event(self, widget, event):
+        print "button ", event.button, " pressed"
+        self.draging = True
+        self.dragingStartP = (event.x, event.y)
+        return True
+    
+    def on_drawingArea_button_release_event(self, widget, event):
+        print "button ", event.button, " released"
+        self.draging = False
+        self.dragingEndP = (event.x, event.y)
+        
+        if ((self.drawing_thread != None) and (self.drawing_thread.isAlive() == True)) or (self.fractal == None):
+            return
+        
+        needToRedraw = False    
+        if event.button == 1:
+            # zoom in
+            # determine draging area
+            # note, this area will be mapped into standard coordinates, p0(x0, y0) is the left-bottom,
+            # so the logic of y and x is different
+            if self.dragingStartP[0] < self.dragingEndP[0]:
+                x0 = self.dragingStartP[0]
+                x1 = self.dragingEndP[0]
+            else:
+                x1 = self.dragingStartP[0]
+                x0 = self.dragingEndP[0]
+            if self.dragingStartP[1] > self.dragingEndP[1]:
+                y0 = self.dragingStartP[1]
+                y1 = self.dragingEndP[1]
+            else:
+                y1 = self.dragingStartP[1]
+                y0 = self.dragingEndP[1]
+            if x0 != x1 and y0 != y1:
+                print "call fractal zoomIn"
+                needToRedraw = self.fractal.zoomIn(x0, y0, x1, y1)
+        elif event.button == 3:
+            # zoom out
+            needToRedraw = self.fractal.zoomOut()
+        if needToRedraw == True:
+            # will start new thread and redraw
+            print "will re-draw"
+        return
+    
+    def on_drawingArea_motion_notify_event(self, widget, event):
+        #print "pointer at ", event.x, ", ", event.y
         return
     
 if __name__ == '__main__':

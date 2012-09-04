@@ -6,6 +6,8 @@ class Fractal:
     colorMap = None
     color = None
     gc = None
+    zoomHistory = []
+    
 
     def __init__(self):
         print "Fractal.__init__"
@@ -67,4 +69,20 @@ class Fractal:
         gc = self.offImage.new_gc(color)
         self.offImage.draw_rectangle(gc, True, 0, 0, 600, 600)
         return
+    
+    def zoomIn(self, x0, y0, x1, y1):
+        # translate computer-coordinates into standard-coordinates
+        x0 = x0 - 300
+        x1 = x1 - 300
+        y0 = 300 - y0
+        y1 = 300 - y1
+        self.zoomHistory.append([x0, y0, x1, y1])
+        print "111111111111111111"
+        return True
+    
+    def zoomOut(self):
+        if len(self.zoomHistory) == 0:
+            return False
+        self.zoomHistory.pop()
+        return True
     

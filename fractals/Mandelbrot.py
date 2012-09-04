@@ -7,6 +7,8 @@ class Mandelbrot (Fractal):
     z0 = (0.0, 0.0)
     width = 600
     height = 600
+    cPlaneArea = (-1.5, -1.5, 1.5, 1.5)
+    cPlaneAreaHistory = []
     
     def __init__(self):
         Fractal.__init__(self)
@@ -56,3 +58,23 @@ class Mandelbrot (Fractal):
     
     def getName(self):
         return "Mandelbrot"
+    
+    def zoomIn(self, x0, y0, x1, y1):
+        Fractal.zoomIn(self, x0, y0, x1, y1)
+        # save current c area
+        self.cPlaneAreaHistory.append(self.cPlaneArea)
+        # calculate new c area (a0, b0, a1, b1)
+        a0 = (self.cPlaneArea[2] - self.cPlaneArea[0]) / 600 * (x0 - (-300)) + self.cPlaneArea[0]
+        b0 = (self.cPlaneArea[3] - self.cPlaneArea[1]) / 600 * (y0 - (-300)) + self.cPlaneArea[1]
+        a1 = (self.cPlaneArea[2] - self.cPlaneArea[0]) / 600 * (x1 - (-300)) + self.cPlaneArea[0]
+        b1 = (self.cPlaneArea[3] - self.cPlaneArea[1]) / 600 * (y1 - (-300)) + self.cPlaneArea[1]
+        self.cPlaneArea = (a0, b0, a1, b1)
+        print self.cPlaneArea
+        return True
+    
+    def zoomOut(self):
+        if len(self.cPlaneAreaHistory) == 0:
+            return False
+        Fractal.zoomOut(self)
+        self.cPlaneArea = self.cPlaneAreaHistory.pop()
+        return True

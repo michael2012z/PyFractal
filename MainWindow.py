@@ -6,7 +6,7 @@ import time
 import threading
 import gobject
 from SyntaxFractal import SyntaxFractal
-from BlankFractal import BlankFractal
+#from BlankFractal import BlankFractal
 from IFSFractal import IFSFractal
 from JuliaSet import JuliaSet
 from Mandelbrot import Mandelbrot
@@ -28,7 +28,7 @@ class MainWindow:
     def registerFractals(self):
         self.fractalList = []
         self.fractalList.append(SyntaxFractal())
-        self.fractalList.append(BlankFractal())
+        #self.fractalList.append(BlankFractal())
         self.fractalList.append(IFSFractal())
         self.fractalList.append(JuliaSet())
         self.fractalList.append(Mandelbrot())
@@ -167,6 +167,7 @@ class MainWindow:
                 y0 = self.dragingEndP[1]
             if x0 != x1 and y0 != y1:
                 print "call fractal zoomIn"
+                print x0, " ", y0, " ", x1, " ", y1
                 needToRedraw = self.fractal.zoomIn(x0, y0, x1, y1)
         elif event.button == 3:
             # zoom out
@@ -174,6 +175,7 @@ class MainWindow:
         if needToRedraw == True:
             # will start new thread and redraw
             print "will re-draw"
+            self.on_drawButton_clicked(self.drawButton)
         return
     
     def on_drawingArea_motion_notify_event(self, widget, event):

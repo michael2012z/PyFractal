@@ -70,7 +70,7 @@ class JuliaSet (Fractal):
                 z = (1.5 * i/(self.width/2), 1.5*j/(self.height/2))
                 #print z
                 k = 0
-                for k in range(0, 128):
+                for k in range(0, 64):
                     # check stop flag at beginning of each loop
                     if self.stopFlag == True:
                         self.stopFlag = False
@@ -84,7 +84,8 @@ class JuliaSet (Fractal):
                     else:
                         break
                 if True:
-                    color = gtk.gdk.Color(red=1.0*k/128, green=(1.0-1.0*k/128), blue=(1.0 - 1.0*k/128))
+                    color = gtk.gdk.Color(red=1.0-1.0*(k/16), green=1.0-1.0*((k%16)/4), blue=1.0-1.0*(k%4))
+                    #color = gtk.gdk.Color(red=1.0*k/128, green=(1.0-1.0*k/128), blue=(1.0 - 1.0*k/128))
                     self.drawPointColor(i, j, color)
         print max
         return

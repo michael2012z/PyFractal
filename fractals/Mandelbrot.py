@@ -5,9 +5,7 @@ import gtk
 class Mandelbrot (Fractal):
     
     z0 = (0.0, 0.0)
-    width = 600
-    height = 600
-    cPlaneArea = (-1.5, -1.5, 1.5, 1.5)
+    cPlaneArea = (-0.75, -1.5, 2.25, 1.5)
     cPlaneAreaHistory = []
     
     def __init__(self):
@@ -35,11 +33,11 @@ class Mandelbrot (Fractal):
     def drawing(self):
         self.cleanAll()
         self.stopFlag = False
-        for i in range(-self.width/2, self.width/2):
-            for j in range(-self.height/2, self.height/2):
-                # left-shift the image for 150 pixels
-                c = (1.5 * (i+150)/(self.width/2), 1.5*j/(self.height/2))
-                #print z
+        for i in range(self.border[0], self.border[2]):
+            for j in range(self.border[1], self.border[3]):
+                a = (self.cPlaneArea[2] - self.cPlaneArea[0])/(self.border[2] - self.border[0])*(i - self.border[0]) + self.cPlaneArea[0]
+                b = (self.cPlaneArea[3] - self.cPlaneArea[1])/(self.border[3] - self.border[1])*(j - self.border[1]) + self.cPlaneArea[1]
+                c = (a, b)
                 k = 0
                 z = self.z0
                 for k in range(0, 128):
@@ -64,12 +62,13 @@ class Mandelbrot (Fractal):
         # save current c area
         self.cPlaneAreaHistory.append(self.cPlaneArea)
         # calculate new c area (a0, b0, a1, b1)
-        a0 = (self.cPlaneArea[2] - self.cPlaneArea[0]) / 600 * (x0 - (-300)) + self.cPlaneArea[0]
-        b0 = (self.cPlaneArea[3] - self.cPlaneArea[1]) / 600 * (y0 - (-300)) + self.cPlaneArea[1]
-        a1 = (self.cPlaneArea[2] - self.cPlaneArea[0]) / 600 * (x1 - (-300)) + self.cPlaneArea[0]
-        b1 = (self.cPlaneArea[3] - self.cPlaneArea[1]) / 600 * (y1 - (-300)) + self.cPlaneArea[1]
+        print "self.zoomArea is ", self.zoomArea
+        a0 = (self.cPlaneArea[2] - self.cPlaneArea[0]) / 600 * (self.zoomArea[0] - self.border[0]) + self.cPlaneArea[0]
+        b0 = (self.cPlaneArea[3] - self.cPlaneArea[1]) / 600 * (self.zoomArea[1] - self.border[1]) + self.cPlaneArea[1]
+        a1 = (self.cPlaneArea[2] - self.cPlaneArea[0]) / 600 * (self.zoomArea[2] - self.border[0]) + self.cPlaneArea[0]
+        b1 = (self.cPlaneArea[3] - self.cPlaneArea[1]) / 600 * (self.zoomArea[3] - self.border[1]) + self.cPlaneArea[1]
         self.cPlaneArea = (a0, b0, a1, b1)
-        print self.cPlaneArea
+        print "cPlaneArea is ", self.cPlaneArea
         return True
     
     def zoomOut(self):
@@ -78,3 +77,4 @@ class Mandelbrot (Fractal):
         Fractal.zoomOut(self)
         self.cPlaneArea = self.cPlaneAreaHistory.pop()
         return True
+    

@@ -7,6 +7,8 @@ class Fractal:
     color = None
     gc = None
     zoomHistory = []
+    zoomArea = (-300, -300, 300, 300)
+    border = (-300, -300, 300, 300)
     
 
     def __init__(self):
@@ -76,8 +78,9 @@ class Fractal:
         x1 = x1 - 300
         y0 = 300 - y0
         y1 = 300 - y1
-        self.zoomHistory.append([x0, y0, x1, y1])
-        print "111111111111111111"
+        self.zoomArea = (x0, y0, x1, y1)
+        print "zoomArea is ", self.zoomArea
+        self.zoomHistory.append(self.zoomArea)
         return True
     
     def zoomOut(self):

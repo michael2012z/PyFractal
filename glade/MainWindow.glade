@@ -6,6 +6,7 @@
     <property name="width_request">850</property>
     <property name="height_request">600</property>
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">PyFractal</property>
     <property name="window_position">center</property>
     <signal name="destroy" handler="on_mainWindow_destroy" swapped="no"/>
     <child>
@@ -31,10 +32,10 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="events">GDK_POINTER_MOTION_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_STRUCTURE_MASK</property>
-                    <signal name="expose_event" handler="on_drawingArea_expose_event" swapped="no"/>
                     <signal name="button_press_event" handler="on_drawingArea_button_press_event" swapped="no"/>
-                    <signal name="motion_notify_event" handler="on_drawingArea_motion_notify_event" swapped="no"/>
+                    <signal name="expose_event" handler="on_drawingArea_expose_event" swapped="no"/>
                     <signal name="button_release_event" handler="on_drawingArea_button_release_event" swapped="no"/>
+                    <signal name="motion_notify_event" handler="on_drawingArea_motion_notify_event" swapped="no"/>
                   </widget>
                 </child>
               </widget>
@@ -164,7 +165,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="use_action_appearance">False</property>
                         <signal name="clicked" handler="on_drawButton_clicked" swapped="no"/>
                       </widget>
                     </child>

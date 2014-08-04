@@ -301,7 +301,7 @@ class IFSFractal (Fractal):
             f = self.transitions[paramIndex][5]
             x = a*oldx + b*oldy + c
             y = d*oldx + e*oldy + f
-            self.drawPointOffset(self.width*x, self.height*y, self.offsetX, self.offsetY)
+            self.drawPointOffset(self.width*x, self.height*y, self.offsetX, self.offsetY, 0, 0, 0)
             #print "drawing dot at", self.width*x, self.height*y, self.offsetX, self.offsetY
             oldx = x
             oldy = y

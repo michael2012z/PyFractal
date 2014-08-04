@@ -84,9 +84,11 @@ class JuliaSet (Fractal):
                     else:
                         break
                 if True:
-                    color = gtk.gdk.Color(red=1.0-1.0*(k/16), green=1.0-1.0*((k%16)/4), blue=1.0-1.0*(k%4))
+                    red=1.0-1.0*(k/16)
+                    green=1.0-1.0*((k%16)/4)
+                    blue=1.0-1.0*(k%4)
                     #color = gtk.gdk.Color(red=1.0*k/128, green=(1.0-1.0*k/128), blue=(1.0 - 1.0*k/128))
-                    self.drawPointColor(i, j, color)
+                    self.drawPoint(i, j, red, green, blue)
         print max
         return
     

@@ -107,7 +107,7 @@ class SyntaxFractal (Fractal):
             if self.fullSyntax[i] == "F":
                 newX = oldX + self.stepLength * math.cos(angle)
                 newY = oldY + self.stepLength * math.sin(angle)
-                self.drawLine(oldX, oldY, newX, newY)
+                self.drawLine(oldX, oldY, newX, newY, 0, 0, 0)
                 #print "draw a line for (%f, %f) to (%f, %f)" %(oldX, oldY, newX, newY)
                 oldX = newX
                 oldY = newY

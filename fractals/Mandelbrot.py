@@ -49,9 +49,10 @@ class Mandelbrot (Fractal):
                     if (z[0]*z[0] + z[1]*z[1]) > 64.0:
                         break
                 if True:
-                    color = gtk.gdk.Color(red=1.0-1.0*(k/16), green=1.0-1.0*((k%16)/4), blue=1.0-1.0*(k%4))
-                    #color = gtk.gdk.Color(red=1.0*k/128, green=(1.0-1.0*k/128), blue=(1.0 - 1.0*k/128))
-                    self.drawPointColor(i, j, color)
+                    red=1.0-1.0*(k/16)
+                    green=1.0-1.0*((k%16)/4)
+                    blue=1.0-1.0*(k%4)
+                    self.drawPoint(i, j, red, green, blue)
         return
     
     def getName(self):

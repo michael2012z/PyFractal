@@ -1,3 +1,5 @@
+import sys
+sys.path.append('./fractals')
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -12,8 +14,6 @@ from JuliaSet import JuliaSet
 from Mandelbrot import Mandelbrot
 
 class MainWindow:
-    drawing_thread = None
-    refreshing_thread = None
     wTree = None
     drawArea = None
     offImage = None
@@ -77,8 +77,6 @@ class MainWindow:
         return
     
     def on_selectorCombo_changed(self, widget):
-        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
-            return
         index = widget.get_active()
         if (index == 0) or (index > len(self.fractalList)):
             return
@@ -92,45 +90,31 @@ class MainWindow:
         return
         
     def on_drawButton_clicked(self, widget):
-        if self.fractal == None:
-            return
-
-        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
-            widget.set_label("Draw")
-            self.fractal.stopDrawing()
-            return
-
-        self.drawing_thread = threading.Thread(target=self.fractal.drawing)
-
+        print "on_drawButton_clicked"
+        widget.set_label("Wait...")
         colorMap = gtk.gdk.colormap_get_system()
         color = colorMap.alloc_color("white")
         gc = self.offImage.new_gc(color)
         self.offImage.draw_rectangle(gc, True, 0, 0, 600, 600)
-        
-        print "on_drawButton_clicked"
-        self.refreshing_thread = threading.Thread(target=self.refreshing)
-        self.drawing_thread.start()
-        self.refreshing_thread.start()
-        widget.set_label("Stop")
+        self.fractal.drawing()
+        paintQueue = self.fractal.getPaintQueue()
+        length = len(paintQueue)
+        i = 0
+        for line in paintQueue:
+            color = gtk.gdk.Color(red = line[1][0], green = line[1][1], blue = line[1][2])
+            gc.set_rgb_fg_color(color)
+            self.offImage.draw_line(gc, line[0][0], line[0][1], line[0][2], line[0][3])
+            i = i + 1
+            if i % (length/20) == 0:
+                self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)                
 
-        #self.drawing_thread.join()
-        #self.refreshing_thread.join()
+        self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
+        widget.set_label("Draw")
         return
 
-    def refreshing(self):
-        gc = self.offImage.new_gc()
-        while (True):
-            time.sleep(0.05)
-            self.drawArea.window.draw_drawable(gc, self.fractal.getDrawable(), 0, 0, 0, 0, 600, 600)
-            if self.drawing_thread.isAlive() == False:
-                self.drawButton.set_label("Draw")
-                break
-        return
-    
     def on_drawingArea_expose_event(self, area, event):
-        if (self.fractal != None) and (self.drawing_thread != None) and (self.drawing_thread.isAlive() == False):
-            gc = self.offImage.new_gc()
-            self.drawArea.window.draw_drawable(gc, self.fractal.getDrawable(), 0, 0, 0, 0, 600, 600)
+        gc = self.offImage.new_gc()
+        self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
         return
     
     def on_drawingArea_button_press_event(self, widget, event):
@@ -143,9 +127,6 @@ class MainWindow:
         print "button ", event.button, " released"
         self.draging = False
         self.dragingEndP = (event.x, event.y)
-        
-        if ((self.drawing_thread != None) and (self.drawing_thread.isAlive() == True)) or (self.fractal == None):
-            return
         
         needToRedraw = False    
         if event.button == 1:
@@ -185,5 +166,7 @@ class MainWindow:
 if __name__ == '__main__':
     c = MainWindow()
     gobject.threads_init()
+    gtk.threads_enter()
     gtk.main()
+    gtk.threads_leave()
     pass

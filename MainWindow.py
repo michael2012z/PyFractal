@@ -86,6 +86,9 @@ class MainWindow:
         self.registerFractals()
         self.showWindow()
         return
+
+    def __del__(self):
+        self.sock.close()
     
     def on_selectorCombo_changed(self, widget):
         if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
@@ -170,7 +173,6 @@ class MainWindow:
                     break
                 else:
                     continue
-        self.sock.close()
         return
 
     def on_drawingArea_expose_event(self, area, event):

@@ -30,6 +30,7 @@ class MainWindow:
     dragingEndP = (0, 0)
     sock = None
     server_address = None
+    drawCount = 0
     
     def registerFractals(self):
         self.fractalList = []
@@ -136,7 +137,10 @@ class MainWindow:
 
     def draw(self, gc, x1, y1, x2, y2, ackAddress):
         self.offImage.draw_line(gc, x1, y1, x2, y2)
-        self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
+        self.drawCount += 1
+        if self.drawCount % 10 == 0:
+            self.drawCount = 0
+            self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
         self.sock.sendto("OK", ackAddress)
         return
 
@@ -173,8 +177,14 @@ class MainWindow:
                     break
                 else:
                     continue
+        gobject.idle_add(self.expose_drawingArea)
         return
 
+    def expose_drawingArea(self):
+        gc = self.offImage.new_gc()
+        self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
+        return
+ 
     def on_drawingArea_expose_event(self, area, event):
         if (self.fractal != None) and (self.drawing_thread != None) and (self.drawing_thread.isAlive() == False):
             gc = self.offImage.new_gc()

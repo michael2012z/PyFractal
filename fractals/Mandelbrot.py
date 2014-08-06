@@ -48,11 +48,10 @@ class Mandelbrot (Fractal):
                     z = self.cMinus(self.cMulti(z, z), c)
                     if (z[0]*z[0] + z[1]*z[1]) > 64.0:
                         break
-                if True:
-                    red=1.0-1.0*(k/16)
-                    green=1.0-1.0*((k%16)/4)
-                    blue=1.0-1.0*(k%4)
-                    self.drawPoint(i, j, red, green, blue)
+                blue=1.0 - (1.0*k/128)
+                green=0.9*((128-k)%8)/8
+                red=1.0 - 1.0*(1.0*(k%16)/16)
+                self.drawPoint(i, j, red, green, blue)
         return
     
     def getName(self):

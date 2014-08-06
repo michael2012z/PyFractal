@@ -1,5 +1,6 @@
 import sys
 sys.path.append('./fractals')
+import socket
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -14,6 +15,8 @@ from JuliaSet import JuliaSet
 from Mandelbrot import Mandelbrot
 
 class MainWindow:
+    drawing_thread = None
+    refreshing_thread = None
     wTree = None
     drawArea = None
     offImage = None
@@ -24,6 +27,8 @@ class MainWindow:
     draging = False
     dragingStartP = (0, 0)
     dragingEndP = (0, 0)
+    sock = None
+    server_address = None
     
     def registerFractals(self):
         self.fractalList = []
@@ -72,11 +77,17 @@ class MainWindow:
         return
     
     def __init__(self):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self.server_address = ('localhost', 10000)
+        self.sock.bind(self.server_address)
+        self.sock.settimeout(3.0)
         self.registerFractals()
         self.showWindow()
         return
     
     def on_selectorCombo_changed(self, widget):
+        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
+            return
         index = widget.get_active()
         if (index == 0) or (index > len(self.fractalList)):
             return
@@ -90,31 +101,80 @@ class MainWindow:
         return
         
     def on_drawButton_clicked(self, widget):
-        print "on_drawButton_clicked"
-        widget.set_label("Wait...")
+        if self.fractal == None:
+            return
+
+        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
+            widget.set_label("Draw")
+            self.fractal.stopDrawing()
+            return
+
+        self.drawing_thread = threading.Thread(target=self.fractal.drawing)
+
         colorMap = gtk.gdk.colormap_get_system()
         color = colorMap.alloc_color("white")
         gc = self.offImage.new_gc(color)
         self.offImage.draw_rectangle(gc, True, 0, 0, 600, 600)
-        self.fractal.drawing()
-        paintQueue = self.fractal.getPaintQueue()
-        length = len(paintQueue)
-        i = 0
-        for line in paintQueue:
-            color = gtk.gdk.Color(red = line[1][0], green = line[1][1], blue = line[1][2])
-            gc.set_rgb_fg_color(color)
-            self.offImage.draw_line(gc, line[0][0], line[0][1], line[0][2], line[0][3])
-            i = i + 1
-            if i % (length/20) == 0:
-                self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)                
+        
+        print "on_drawButton_clicked"
+        self.refreshing_thread = threading.Thread(target=self.refreshing)
 
+        self.refreshing_thread.start()
+
+        self.drawing_thread.start()
+
+        widget.set_label("Stop")
+
+        #self.drawing_thread.join()
+        #self.refreshing_thread.join()
+        return
+
+    def draw(self, gc, x1, y1, x2, y2, ackAddress):
+        self.offImage.draw_line(gc, x1, y1, x2, y2)
         self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
-        widget.set_label("Draw")
+        self.sock.sendto("OK", ackAddress)
+        return
+
+    def updateButtonLabel(self, label):
+        self.drawButton.set_label(label)
+        return
+
+    def refreshing(self):
+        # receive data
+        # update button label
+        gc = self.offImage.new_gc()
+        while True:
+            try:
+                data, address = self.sock.recvfrom(512)
+                if data:
+                    drawInstruction = data.split()
+                    if len(drawInstruction) <> 7:
+                        print "bad draw instruction: " + data
+                    else:
+                        x1 = int(drawInstruction[0])
+                        y1 = int(drawInstruction[1])
+                        x2 = int(drawInstruction[2])
+                        y2 = int(drawInstruction[3])
+                        red = float(drawInstruction[4])
+                        green = float(drawInstruction[5])
+                        blue = float(drawInstruction[6])
+                        color = gtk.gdk.Color(red, green, blue)
+                        gc.set_rgb_fg_color(color)
+                        gobject.idle_add(self.draw, gc, x1, y1, x2, y2, address)
+            except Exception, e:
+                # socket timeout, check if drawing thread is still alive
+                if self.drawing_thread.isAlive() == False:
+                    gobject.idle_add(self.updateButtonLabel, "Draw")
+                    break
+                else:
+                    continue
+        self.sock.close()
         return
 
     def on_drawingArea_expose_event(self, area, event):
-        gc = self.offImage.new_gc()
-        self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
+        if (self.fractal != None) and (self.drawing_thread != None) and (self.drawing_thread.isAlive() == False):
+            gc = self.offImage.new_gc()
+            self.drawArea.window.draw_drawable(gc, self.offImage, 0, 0, 0, 0, 600, 600)
         return
     
     def on_drawingArea_button_press_event(self, widget, event):

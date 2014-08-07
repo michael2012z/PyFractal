@@ -31,6 +31,7 @@ class MainWindow:
     sock = None
     server_address = None
     drawCount = 0
+    dragingLastRect = []
     
     def registerFractals(self):
         self.fractalList = []
@@ -192,12 +193,18 @@ class MainWindow:
         return
     
     def on_drawingArea_button_press_event(self, widget, event):
+        self.dragingLastRect = [int(event.x), int(event.y), int(event.x), int(event.y)]
+        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
+            return
         print "button ", event.button, " pressed"
         self.draging = True
         self.dragingStartP = (event.x, event.y)
         return True
     
     def on_drawingArea_button_release_event(self, widget, event):
+        if self.draging == False:
+            return
+
         print "button ", event.button, " released"
         self.draging = False
         self.dragingEndP = (event.x, event.y)
@@ -227,14 +234,44 @@ class MainWindow:
         elif event.button == 3:
             # zoom out
             needToRedraw = self.fractal.zoomOut()
-        if needToRedraw == True:
-            # will start new thread and redraw
-            print "will re-draw"
-            self.on_drawButton_clicked(self.drawButton)
+            if needToRedraw == True:
+                # will start new thread and redraw
+                print "will re-draw"
+                self.on_drawButton_clicked(self.drawButton)
         return
     
     def on_drawingArea_motion_notify_event(self, widget, event):
         #print "pointer at ", event.x, ", ", event.y
+        if (self.drawing_thread != None) and (self.drawing_thread.isAlive() == True):
+            return
+        x0 = 0
+        y0 = 0
+        x1 = 0
+        y1 = 0
+        if self.draging == True:
+            if event.x > self.dragingStartP[0]:
+                x0 = self.dragingStartP[0]
+                x1 = event.x
+            else:
+                x0 = event.x
+                x1 = self.dragingStartP[0]
+            if event.y > self.dragingStartP[1]:
+                y0 = self.dragingStartP[1]
+                y1 = event.y
+            else:
+                y0 = event.y
+                y1 = self.dragingStartP[1]
+            x0 = int(x0)
+            x1 = int(x1)
+            y0 = int(y0)
+            y1 = int(y1)
+            colorMap = gtk.gdk.colormap_get_system()
+            color = colorMap.alloc_color("yellow")
+            gc = self.drawArea.window.new_gc(color)
+            self.drawArea.window.draw_drawable(gc, self.offImage, self.dragingLastRect[0], self.dragingLastRect[1], self.dragingLastRect[0], self.dragingLastRect[1], self.dragingLastRect[2]-self.dragingLastRect[0]+1, self.dragingLastRect[3]-self.dragingLastRect[1]+1)
+            #self.drawArea.window.draw_drawable(gc, self.offImage, x0, y0, x0, y0, x1-x0, y1-y0)
+            self.drawArea.window.draw_rectangle(gc, False, x0, y0, x1-x0, y1-y0)
+            self.dragingLastRect = [x0, y0, x1, y1]
         return
     
 if __name__ == '__main__':

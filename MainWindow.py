@@ -84,7 +84,7 @@ class MainWindow:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_address = ('localhost', 10000)
         self.sock.bind(self.server_address)
-        self.sock.settimeout(3.0)
+        self.sock.settimeout(0.5)
         self.registerFractals()
         self.showWindow()
         return

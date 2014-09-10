@@ -1,14 +1,17 @@
-==**PyFractal**== is a tool to create every kinds of fractal image. It is also a framework. New fractal algorithm can be 'pluged in' as seperate modules. 
-Now the algorithm listed below has been implemented in PyFractal:
-
+==**PyFractal**== is a tool to create every kinds of fractal image, writen in Python. It is also a framework. New fractal algorithms can be 'pluged in' as seperate modules.
+Now the algorithms listed below have been implemented in PyFractal:
+- Mandelbrot
+- Julia
+- Syntax
+- IFS
+- DLA (testing)
 
 ###### Usage
-PyFractal has but one window shown below. Left half is drawing area; right half is parameters area.
-By pulling down "Sellect a template" menu, you will see different fractal algorithm, corresponding parameter panel will be shown. Kinds of default parameter combinations have been defined. Of course you can change any of them of change the image.
+PyFractal has only one window, shown below. Left half is drawing area; right half is parameters area.
+By pulling down "Sellect a template" menu, you will see different fractal algorithm, corresponding parameter panel will be shown. Kinds of default parameter combinations have been defined. Of course you can modify any of them to generate your own image.
 ![](https://raw.githubusercontent.com/michael2012z/PyFractal/master/screenshot/MainWindow.png)
 
 ###### Screenshot
-
 **Mandelbrot** algorithm
 Mandelbrot image is the most famous fractal. It was named after the "Father Of Fractal".
 ![](https://raw.githubusercontent.com/michael2012z/PyFractal/master/screenshot/Mandelbrot01.png)
